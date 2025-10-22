@@ -56,11 +56,9 @@ class mutationController extends Controller
 
     public function list(){
         $result = DB::table('dna')
-            -> selectRaw('
-                dna, isMutant, created_at
-            ')
+            -> select('dna', 'isMutant', 'created_at')
             -> orderByRaw('created_at DESC')
-            -> get();
+            -> limit(10);
 
         //$dna = Mutation::all();
 
