@@ -6,5 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Mutation extends Model
 {
-    protected $example = 'example';
+    protected $table = 'dna';
+
+    protected $fillable = [
+        'dna',
+        'isMutant'
+    ];
+
 }
