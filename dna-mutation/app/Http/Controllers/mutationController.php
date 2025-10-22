@@ -55,9 +55,16 @@ class mutationController extends Controller
     }
 
     public function list(){
-        $dna = Mutation::all();
+        $result = DB::table('dna')
+            -> selectRaw('
+                dna, isMutant, created_at
+            ')
+            -> orderByRaw('created_at DESC')
+            -> get();
 
-        if($dna->isEmpty()){
+        //$dna = Mutation::all();
+
+        if(!$result){
             $data = [
                 'message' => 'No hay registros',
                 'status' => '200'
@@ -65,12 +72,7 @@ class mutationController extends Controller
             return response() -> json($data, 200);
         }
         
-        $data = [
-            'data' => $dna,
-            'status' => '200'
-        ];
-
-        return response() -> json($data, 200);
+        return response() -> json($result, 200);
     }
 
     protected function hasMutation($dna){
