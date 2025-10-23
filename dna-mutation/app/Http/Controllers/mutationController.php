@@ -81,12 +81,12 @@ class mutationController extends Controller
             -> limit(10)
             -> get();
 
-        // Verifica si existen registros
+        // Verifica si existen registros en la base de datos
         if(!$result){
             return response() -> json('No hay registros', 200);
         }
         
-        // Aquí almacenamos en un array los registros obtenidos para regresar en el JSON de salida
+        // Se almacenan los datos en un array los registros obtenidos para el formato correcto del JSON de salida
         $data = [];
         foreach ($result as $row){
             $data[] = [
