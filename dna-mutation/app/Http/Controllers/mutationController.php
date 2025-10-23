@@ -59,7 +59,8 @@ class mutationController extends Controller
         $result = DB::table('dna')
             -> select('dna', 'isMutant', 'created_at')
             -> orderByRaw('created_at DESC')
-            -> limit(10);
+            -> limit(10)
+            -> get();
 
         if(!$result){
             $data = [
@@ -69,7 +70,16 @@ class mutationController extends Controller
             return response() -> json($data, 200);
         }
         
-        return response() -> json($result, 200);
+        $data = [];
+        foreach ($result as $row){
+            $data[] = [
+                'dnaString' => $row->dna,
+                'isMutant' => $row->isMutant,
+                'createdDate' => $row->created_at
+            ];
+        }
+        
+        return response() -> json($data, 200);
     }
 
     protected function hasMutation($dna){
