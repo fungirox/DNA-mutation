@@ -28,7 +28,23 @@ class mutationController extends Controller
         return response()->json($isMutant,403);
     }
 
+    protected function hasMutation($dna){
+        return false;
+    }
+
+    protected function store($dna,$isMutant){
+        // Al llamar a esta función almanacenamos en la base de datos nuestro registro (sin importar el resultado), unicamente enviamos los datos
+        // del input y el resultado obtenido, el resto de datos se calculan en la base de datos
+        $row = Mutation::create([
+            'dna' => $dna,
+            'isMutant' => $isMutant
+        ]);
+
+        return response() -> json($row, 201);
+    }
+
     public function stats(){
+        // Consulta en la base de datos el total de registros CON mutaciones (count_mutations) y el total de registros SIN mutaciones (count_no_mutations)
         $result = DB::table('dna')
             -> selectRaw('
                 SUM(CASE WHEN isMutant = 1 THEN 1 ELSE 0 END) as count_mutations,
@@ -36,16 +52,17 @@ class mutationController extends Controller
             ')
             -> first();
         
+        // Aquí verifica que existan registros en la base de datos
         if(!$result){
-            $data = [
-                'message' => 'No hay registros',
-                'status' => '200'
-            ];
-            return response() -> json($data, 200);
+            return response() -> json('No hay registros', 200);
         }
 
+        // En caso de que existan registros realizará el calculo del rate
+        // Primero verifica que los registros SIN mutaciones sea mayor a cero, en caso de ser mayor a 0 dividirá el total de registros CON mutaciones entre el total 
+        // de registros SIN mutaciones. En caso contrario, se establece como 0. 
         $rate = (int)($result-> count_no_mutations) > 0 ? (int)($result-> count_mutations) / (int)($result-> count_no_mutations) : 0;
 
+        // Aquí se almacena en $data ambos registros y el $rate para retornarlos junto al status
         $data = [
             'count_mutations' => $result->count_mutations,
             'count_no_mutations' => $result->count_no_mutations,
@@ -56,20 +73,20 @@ class mutationController extends Controller
     }
 
     public function list(){
+        // Aquí se consultan a la tabla dna los campos 'dna': el input original, 'isMutant': el resultado obtenido de hasMutation() y 'created_at': la fecha de 
+        // creación del registo. Se ordenan de acuerdo al campo 'created_at' de forma descendiente para obtener siempre los ultimos 10 registros (especificado por limit(10))
         $result = DB::table('dna')
             -> select('dna', 'isMutant', 'created_at')
             -> orderByRaw('created_at DESC')
             -> limit(10)
             -> get();
 
+        // Verifica si existen registros
         if(!$result){
-            $data = [
-                'message' => 'No hay registros',
-                'status' => '200'
-            ];
-            return response() -> json($data, 200);
+            return response() -> json('No hay registros', 200);
         }
         
+        // Aquí almacenamos en un array los registros obtenidos para regresar en el JSON de salida
         $data = [];
         foreach ($result as $row){
             $data[] = [
@@ -82,21 +99,4 @@ class mutationController extends Controller
         return response() -> json($data, 200);
     }
 
-    protected function hasMutation($dna){
-        return false;
-    }
-
-    protected function store($dna,$isMutant){
-        $row = Mutation::create([
-            'dna' => $dna,
-            'isMutant' => $isMutant
-        ]);
-
-        $data = [
-            'row' => $row,
-            'status' => 201
-        ];
-
-        return response() -> json($data, 201);
-    }
 }
