@@ -22,9 +22,10 @@ class mutationController extends Controller
         $isMutant = $this->hasMutation($dna);
         $this->store($inputString,$isMutant);
 
-        return response()->json([
-            'isMutant' => $isMutant
-        ]);
+        if($isMutant){
+            return response()->json($isMutant,200);
+        }
+        return response()->json($isMutant,403);
     }
 
     public function stats(){
@@ -60,8 +61,6 @@ class mutationController extends Controller
             -> orderByRaw('created_at DESC')
             -> limit(10);
 
-        //$dna = Mutation::all();
-
         if(!$result){
             $data = [
                 'message' => 'No hay registros',
@@ -74,7 +73,7 @@ class mutationController extends Controller
     }
 
     protected function hasMutation($dna){
-        return true;
+        return false;
     }
 
     protected function store($dna,$isMutant){
