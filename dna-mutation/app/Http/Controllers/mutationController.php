@@ -54,7 +54,7 @@ class mutationController extends Controller
         
         // Aquí verifica que existan registros en la base de datos
         if(!$result){
-            return response() -> json('No hay registros', 200);
+            return response() -> json('No hay registros', 204);
         }
 
         // En caso de que existan registros realizará el calculo del rate
@@ -83,7 +83,7 @@ class mutationController extends Controller
 
         // Verifica si existen registros en la base de datos
         if(!$result){
-            return response() -> json('No hay registros', 200);
+            return response() -> json('No hay registros', 204);
         }
         
         // Se almacenan los datos en un array los registros obtenidos para el formato correcto del JSON de salida
