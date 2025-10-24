@@ -1,0 +1,22 @@
+<div class="stats">
+    <h2>Has Mutation ?</h2>
+    <h3>DNA result</h3>
+
+    <div *ngIf="stats && list">
+        <h2>Last 10 rows</h2>
+        <div *ngFor="let row of list">
+            <div class="table">
+                <p>String: <strong>{{ row.dnaString }}</strong>
+                    isMutant?: <strong>{{ row.isMutant }}</strong>
+                    date: <strong>{{ row.createdDate }}</strong></p>
+            </div>
+        </div>
+        <h2>Stats</h2>
+        <p>Mutations: <strong>{{ stats.count_mutations }}</strong></p>
+        <p>No Mutations: <strong>{{ stats.count_no_mutations }}</strong></p>
+        <p>Rate: <strong>{{ stats.rate }}</strong></p>
+    </div>
+    <div *ngIf="!stats && !list">
+        <p>No hay registros</p>
+    </div>
+</div>
