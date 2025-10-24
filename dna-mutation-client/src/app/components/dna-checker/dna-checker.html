@@ -1,28 +1,30 @@
-<h1>Does your DNA has a mutation?</h1>
-<form action="http://localhost:8000/api/list" method="GET">
-    <label for="dna-input">DNA sequence</label>
-    <input type="textarea" name="dna-input" id="dna-input">
-    <input type="submit">
-</form>
-<div class="stats">
-    <h2>Has Mutation ?</h2>
-    <h3>DNA result</h3>
+<div class="display">
+    <h1>Does your DNA has a mutation?</h1>
+    <form action="http://localhost:8000/api/list" method="GET">
+        <label for="dna-input">DNA sequence</label>
+        <input type="textarea" name="dna-input" id="dna-input">
+        <input type="submit">
+    </form>
+    <div class="stats">
+        <h2>Has Mutation ?</h2>
+        <h3>DNA result</h3>
 
-    <div *ngIf="stats && list">
-        <h2>Last 10 rows</h2>
-        <div *ngFor="let row of list">
-            <div class="table">
-                <p>String: <strong>{{ row.dnaString }}</strong>
-                    isMutant?: <strong>{{ row.isMutant }}</strong>
-                    date: <strong>{{ row.createdDate }}</strong></p>
+        <div *ngIf="stats && list">
+            <h2>Last 10 rows</h2>
+            <div *ngFor="let row of list">
+                <div class="table">
+                    <p>String: <strong>{{ row.dnaString }}</strong>
+                        isMutant?: <strong>{{ row.isMutant }}</strong>
+                        date: <strong>{{ row.createdDate }}</strong></p>
+                </div>
             </div>
-        </div> 
-        <h2>Stats</h2>
-        <p>Mutations: <strong>{{ stats.count_mutations }}</strong></p>
-        <p>No Mutations: <strong>{{ stats.count_no_mutations }}</strong></p>
-        <p>Rate: <strong>{{ stats.rate }}</strong></p>
-    </div>
-    <div *ngIf="!stats && !list">
-        <p>No hay registros</p>
+            <h2>Stats</h2>
+            <p>Mutations: <strong>{{ stats.count_mutations }}</strong></p>
+            <p>No Mutations: <strong>{{ stats.count_no_mutations }}</strong></p>
+            <p>Rate: <strong>{{ stats.rate }}</strong></p>
+        </div>
+        <div *ngIf="!stats && !list">
+            <p>No hay registros</p>
+        </div>
     </div>
 </div>

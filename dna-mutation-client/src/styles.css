@@ -9,7 +9,21 @@ body{
     font-family: 'Roboto Mono', sans-serif;
 }
 h1{
-    font-family: 'Special Gothic'
+    font-family: 'Special Gothic';
+    margin: 0px;
+}
+
+.display{
+    background-color: #fafafa;
+    width: 70%;
+    margin-left:auto;
+    margin-right:auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 20px #d4d4d4;
+    border-radius: 24px;
+    padding: 24px;
+    border: 2px solid #262626;
 }
 
 /*
