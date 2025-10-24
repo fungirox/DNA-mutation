@@ -1,39 +1,52 @@
-<div class="display">
+<div class="layout">
     <div class="titles">
         <h1>Does your DNA has a mutation?</h1>
     </div>
     <div class="content">
         <div class="get-results">
-        <form action="http://localhost:8000/api/list" method="GET">
-            <label for="dna-input">DNA sequence</label>
-            <input type="textarea" name="dna-input" id="dna-input">
-            <input type="submit">
-        </form>
-        <h2>Has Mutation ?</h2>
-        <h3>DNA result</h3>
-    </div>
-    <div class="show-info">
-        <div *ngIf="stats && list">
-            <div>
-                <h2>Last 10 rows</h2>
-                <div *ngFor="let row of list">
-                    <div class="table">
-                        <p>String: <strong>{{ row.dnaString }}</strong>
-                            isMutant?: <strong>{{ row.isMutant }}</strong>
-                            date: <strong>{{ row.createdDate }}</strong></p>
-                    </div>
+            <label for="dna-input">Introduce your DNA sequence</label>
+            <textarea [(ngModel)]="input" rows="10" name="dna-input" id="dna-input" type="text"
+                placeholder="A T G C G A&#10;C A G T G C&#10;T T A T T T&#10;A G A C G G&#10;G C G T C A&#10;T C A C T G"></textarea>
+            <button (click)="isMutant()" id="btn-find">Find Mutation</button>
+            <h2>Has Mutation ?</h2>
+            @if (result) {
+                <h3>Yes, you're mutant !! 👽</h3>
+            } @else if(result != null){
+                <h3>No, you aren't mutant 🤖</h3>
+            }
+        </div>
+        <div class="show-info">
+            <div *ngIf="stats && list">
+                <div class="list">
+                    <h2>Last 10 rows</h2>
+                    <table class="tg">
+                        <thead>
+                            <tr>
+                                <th>Input String</th>
+                                <th>Mutation</th>
+                                <th>Created Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let row of list">
+                                <td>{{ row.dnaString }}</td>
+                                <td [class]="row.isMutant ? 'mutant' : 'no_mutant'">{{ row.isMutant ? "true" : "false"}}
+                                </td>
+                                <td>{{ row.createdDate | date:'short' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h2>Stats</h2>
+                    <p>Mutations: <strong>{{ stats.count_mutations }}</strong></p>
+                    <p>No Mutations: <strong>{{ stats.count_no_mutations }}</strong></p>
+                    <p>Rate: <strong>{{ stats.rate }}</strong></p>
                 </div>
             </div>
-            <div>
-                <h2>Stats</h2>
-                <p>Mutations: <strong>{{ stats.count_mutations }}</strong></p>
-                <p>No Mutations: <strong>{{ stats.count_no_mutations }}</strong></p>
-                <p>Rate: <strong>{{ stats.rate }}</strong></p>
+            <div *ngIf="!stats && !list">
+                <h2>No existen registros</h2>
             </div>
         </div>
-        <div *ngIf="!stats && !list">
-            <p>No hay registros</p>
-        </div>
-    </div>
     </div>
 </div>

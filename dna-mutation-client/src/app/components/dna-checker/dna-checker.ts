@@ -14,6 +14,10 @@ import { response } from 'express';
 export class DnaChecker implements OnInit {
   constructor(private api: Api) { }
 
+  input: any = null;
+  statsGraph: any; 
+  isActive: any;
+  
   // Variables de consulta para almacenar los datos de la API y mostrar en la vista
   result: any = null;
   stats: any = null;
@@ -23,10 +27,13 @@ export class DnaChecker implements OnInit {
   ngOnInit(): void {
     this.loadStats();
     this.loadList();
+    this.graphStats();
   }
 
-  isMutant(): boolean {
-    return true;
+  isMutant() {
+    console.log(this.input);
+    
+    this.result = false;
   }
 
   // Consulta usando el servicio de API a nuestra API y almacena los resultados obtenidos o imprime un error en la consola.
@@ -53,4 +60,13 @@ export class DnaChecker implements OnInit {
 
     });
   }
+
+  graphStats(){
+    this.statsGraph = Array(10);
+    this.isActive = this.stats.rate * 10;
+    this.statsGraph.forEach(element => {
+      
+    });
+  }
+  
 }
