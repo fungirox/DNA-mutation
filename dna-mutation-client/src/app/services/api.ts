@@ -10,6 +10,10 @@ export class Api {
 
   constructor(private http: HttpClient) {}
 
+  // Consulta en la API anteriormente elaborada en Laravel
+
+  // isMutant():
+
   getStats(): Observable<any>{
     return this.http.get(`${this.url}/stats`);
   }
@@ -18,6 +22,6 @@ export class Api {
     return this.http.get(`${this.url}/list`);
   }
 
-  
+
 
 }
