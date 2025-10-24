@@ -64,9 +64,9 @@ export class DnaChecker implements OnInit {
   graphStats(){
     this.statsGraph = Array(10);
     this.isActive = this.stats.rate * 10;
-    this.statsGraph.forEach(element => {
+    // this.statsGraph.forEach(element => {
       
-    });
+    // });
   }
   
 }
