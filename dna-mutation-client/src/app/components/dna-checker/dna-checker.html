@@ -8,12 +8,14 @@
             <textarea [(ngModel)]="input" rows="10" name="dna-input" id="dna-input" type="text"
                 placeholder="A T G C G A&#10;C A G T G C&#10;T T A T T T&#10;A G A C G G&#10;G C G T C A&#10;T C A C T G"></textarea>
             <button (click)="isMutant()" id="btn-find">Find Mutation</button>
-            <h2>Has Mutation ?</h2>
-            @if (result) {
-                <h3>Yes, you're mutant !! 👽</h3>
-            } @else if(result != null){
-                <h3>No, you aren't mutant 🤖</h3>
-            }
+            <h2>Has Mutation ?
+                @if (result) {
+                Yes, you're mutant !! 👽
+                } @else if(result != null){
+                No, you aren't mutant 🤖
+                }
+            </h2>
+
         </div>
         <div class="show-info">
             <div *ngIf="stats && list">
@@ -38,10 +40,16 @@
                     </table>
                 </div>
                 <div>
-                    <h2>Stats</h2>
-                    <p>Mutations: <strong>{{ stats.count_mutations }}</strong></p>
-                    <p>No Mutations: <strong>{{ stats.count_no_mutations }}</strong></p>
-                    <p>Rate: <strong>{{ stats.rate }}</strong></p>
+                    <h2>Stats rate : <strong>{{ stats.rate }}</strong></h2>
+                    <div class="graph-stats">
+                        <div *ngFor="let color of statsGraph" class="graph-stats-box" [style.background-color]="color">
+                        </div>
+                    </div>
+                    <div class="graph-description">
+                        <span>Mutations: <strong>{{ stats.count_mutations }}</strong></span>
+                        <span>No Mutations: <strong>{{ stats.count_no_mutations }}</strong></span>
+                    </div>
+
                 </div>
             </div>
             <div *ngIf="!stats && !list">

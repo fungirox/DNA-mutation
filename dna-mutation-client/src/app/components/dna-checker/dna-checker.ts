@@ -15,9 +15,9 @@ export class DnaChecker implements OnInit {
   constructor(private api: Api) { }
 
   input: any = null;
-  statsGraph: any; 
+  statsGraph: string[] = [];
   isActive: any;
-  
+
   // Variables de consulta para almacenar los datos de la API y mostrar en la vista
   result: any = null;
   stats: any = null;
@@ -27,12 +27,14 @@ export class DnaChecker implements OnInit {
   ngOnInit(): void {
     this.loadStats();
     this.loadList();
-    this.graphStats();
+    if(this.stats){
+      this.graphStats();
+    }
   }
 
   isMutant() {
     console.log(this.input);
-    
+
     this.result = false;
   }
 
@@ -61,12 +63,11 @@ export class DnaChecker implements OnInit {
     });
   }
 
-  graphStats(){
-    this.statsGraph = Array(10);
-    this.isActive = this.stats.rate * 10;
-    // this.statsGraph.forEach(element => {
-      
-    // });
+  graphStats() {
+    this.isActive = this.stats.rate * 100;
+    for (let i = 0; i < 20; i++) {
+      this.statsGraph.push((i + 1) * 5 <= this.isActive ? '#404040' : '#d4d4d4' );
+    }
   }
-  
+
 }
