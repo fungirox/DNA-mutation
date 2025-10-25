@@ -40,24 +40,15 @@ class mutationController extends Controller
         $rows = count($matrix);
         $cols = count($matrix[0]);
 
-        for($i = 0 ; $i < $rows ; $i++){
-            for($j = 0 ; $j < $cols ; $j++){
-                if($i == 0){
-                    if($j == 0){
-
+        for ($i = 0; $i < $rows; $i++) {
+            for ($j = 0; $j < $cols; $j++) {
+                if ($i == 0) {
+                    if ($j == 0) {
+                    } elseif ($j == $cols - 1) {
+                    } else {
                     }
-                    elseif($j == $cols-1){
-
-                    }
-                    else{
-
-                    }
-                }
-                elseif($i == $rows-1){
-
-                }
-                else{
-
+                } elseif ($i == $rows - 1) {
+                } else {
                 }
             }
         }
@@ -66,8 +57,36 @@ class mutationController extends Controller
     }
 
     // Se llaman x y y porque son coordenadas de la matriz
-    function adyacente($x , $y, $rows, $cols){
+    function adyacentes($x, $y, $rows, $cols, $matrix)
+    {
+        $adyacentes = [];
+        if($x+1 < $rows-1){
+            $matrix[$y][$x + 1];
+            array_push($adyacentes,[$y, $x + 1]); // derecha 
+        }
+        if($y+1 < $cols-1){
+            array_push($adyacentes,[$y + 1, $x]); // abajo
+            if(count($adyacentes) == 2){
+                array_push($adyacentes,[$y + 1, $x + 1]); // diagonal
+            }
+            if($x > 0){
+                array_push($adyacentes,[$y + 1, $x - 1]); // diagonal inverso
+            }
+        }
+        return $adyacentes;
+    }
 
+    function recursividad($xOld,$yOld,$x,$y,$n,$matrix){
+        if($n == 4){
+            return true;
+        }
+        if($matrix[$yOld][$xOld] == $matrix[$y][$x]){
+            $n++;
+            $xDif = $x - $xOld;
+            $yDif = $y - $yOld;
+            $this->recursividad($x,$y,$x + $xDif,$y + $yDif,$n,$matrix);
+        }
+        return false;
     }
 
     protected function store($dna, $isMutant)
