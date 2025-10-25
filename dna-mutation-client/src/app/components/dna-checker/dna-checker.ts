@@ -14,7 +14,7 @@ import { response } from 'express';
 export class DnaChecker implements OnInit {
   constructor(private api: Api) { }
 
-  input: any = null;
+  dna_input: any = null;
   statsGraph: string[] = [];
   isActive: any;
 
@@ -27,15 +27,27 @@ export class DnaChecker implements OnInit {
   ngOnInit(): void {
     this.loadStats();
     this.loadList();
-    if(this.stats){
+    if (this.stats) {
       this.graphStats();
     }
   }
 
+  // 
   isMutant() {
-    console.log(this.input);
+    const dnaArray = this.dna_input
+      ?.replace(/ /g, '')      
+      .split('\n')              
+      .map((line : string)=> line.trim()) 
+      .filter((line : string) => line.length > 0) || []; 
 
-    this.result = false;
+    this.api.isMutant(dnaArray).subscribe({
+      next: (response) => {
+        this.result = response;
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
   }
 
   // Consulta usando el servicio de API a nuestra API y almacena los resultados obtenidos o imprime un error en la consola.
@@ -63,10 +75,11 @@ export class DnaChecker implements OnInit {
     });
   }
 
+  // Crea un arreglo para determinar el color del grafico que muestra el rate
   graphStats() {
     this.isActive = this.stats.rate * 100;
     for (let i = 0; i < 20; i++) {
-      this.statsGraph.push((i + 1) * 5 <= this.isActive ? '#404040' : '#d4d4d4' );
+      this.statsGraph.push((i + 1) * 5 <= this.isActive ? '#404040' : '#d4d4d4');
     }
   }
 
