@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
-class mutationController extends Controller
+class MutationController extends Controller
 {
     public function mutation(Request $request)
     {
