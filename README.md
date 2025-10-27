@@ -20,7 +20,7 @@ git clone https://github.com/fungirox/DNA-mutation.git
 ```
 Navega hasta el directorio del proyecto
 ```
-cd dna-mutation
+cd dna-mutation-client
 ```
 Ejecuta el programa
 ```
@@ -31,6 +31,12 @@ Por defecto, usarás el puerto 4200, puedes acceder usando esta ruta
 http://localhost:4200/
 ```
 ### Uso
+Esta será nuestro buscador. Al lado derecho tenemos el resumen de los ultimos 10 registros y el ratio de mutaciones
+<img width="1912" height="924" alt="image" src="https://github.com/user-attachments/assets/d749960a-f059-4c6f-a09c-795babbc223d" />
+En la parte izquierda tendremos el área de texto donde podemos interactuar escribiendo nuestra secuencia de ADN inicial.
+<img width="1394" height="666" alt="image" src="https://github.com/user-attachments/assets/6e4e6bbc-dc20-42a8-ab68-b436bbe9b7b5" />
+Haremos Click sobre `Find mutation` y obtendremos nuestro resultado
+<img width="1912" height="924" alt="image" src="https://github.com/user-attachments/assets/e0d553c2-4cc4-49ff-ac75-15b8f221eab9" />
 ## Creditos
 - Dulce Roxanna Clark Valenzuela ([@fungirox](https://github.com/fungirox))
 
