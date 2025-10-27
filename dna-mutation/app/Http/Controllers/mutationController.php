@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class mutationController extends Controller
 {
     public function mutation(Request $request)
     {
+        // Validación de los datos de entrada
         $validator = Validator::make($request->all(), [
             'dna_input' => 'required|array|size:6',
             'dna_input.*' => 'required|string|size:6|regex:/^[ATCG]+$/i'
@@ -22,70 +24,110 @@ class mutationController extends Controller
         }
 
         $dna = $request->input('dna_input');
-
         $isMutant = $this->hasMutation($dna);
-        //$this->store($inputString,$isMutant);
-
+        
+        // Convierte el string del input para guardar en la base de datos
+        $dnaString = "";
+        foreach($dna as $row){
+            $dnaString = $dnaString . '[' . $row . ']';
+        }
+        $this->store($dnaString,$isMutant);
 
         return response()->json(['result' => $isMutant], $isMutant ? 200 : 403);
     }
 
     protected function hasMutation($dna)
     {
+        // Se separan los strings de entrada en una sola matriz de chars
         $matrix = [];
+        // Esta bandera indica si se encontró 1 secuencia de 4 letras iguales
         $found = false;
         foreach ($dna as $i => $row) {
             $matrix[$i] = str_split($row);
         }
-        $rows = count($matrix);
-        $cols = count($matrix[0]);
+        // Se obtiene el tamaño de la matriz 
+        $dimension = count($matrix);
 
-        for ($i = 0; $i < $rows; $i++) {
-            for ($j = 0; $j < $cols; $j++) {
-                if ($i == 0) {
-                    if ($j == 0) {
-                    } elseif ($j == $cols - 1) {
-                    } else {
-                    }
-                } elseif ($i == $rows - 1) {
-                } else {
+        // Se recorre la matriz
+        $result = 0;
+        for ($i = 0; $i < $dimension; $i++) {
+            for ($j = 0; $j < $dimension; $j++) {
+                // se llama al metodo que busca los adyacentes de nuestra coordenada actual
+                $result = $result + $this->findNext($j, $i, $dimension, $matrix);
+                // En caso de que ya tengamos una mutación anterior y esta nueva que se 
+                // almacena en result, podemos regresar true dando como valida la operación
+                // o en su caso, se observen las dos mutaciones en la misma coordenada
+                if($found || $result > 1){
+                    return true;
+                }
+                // En caso de que sea nuestra primera mutación, simplemente se activa la bandera
+                elseif(!$found && $result < 1){
+                    $found = true;
                 }
             }
         }
-
-        return true;
+        // Si no se cumplio la anterior simplemente retorna false
+        return false;
     }
 
     // Se llaman x y y porque son coordenadas de la matriz
-    function adyacentes($x, $y, $rows, $cols, $matrix)
+    function findNext($x, $y, $dimension, $matrix)
     {
-        $adyacentes = [];
-        if($x+1 < $rows-1){
-            $matrix[$y][$x + 1];
-            array_push($adyacentes,[$y, $x + 1]); // derecha 
+        $cantidad = 0;
+        // Se analiza si las siguientes ubicaciones podrian ser validas, en caso de serlo se llama al siguiente
+        // método que realiza un análisis en cadena
+        if($x + 1 < $dimension){
+            if($this->findSecuence($x, $y, ($x + 1), $y, 1, $matrix, $dimension, $dimension)){ 
+                $cantidad++; // derecha 
+            }
         }
-        if($y+1 < $cols-1){
-            array_push($adyacentes,[$y + 1, $x]); // abajo
-            if(count($adyacentes) == 2){
-                array_push($adyacentes,[$y + 1, $x + 1]); // diagonal
+        if($y+1 < $dimension){
+            if($this->findSecuence($x, $y, $x, ($y + 1), 1, $matrix, $dimension, $dimension)){
+                $cantidad++; // abajo
+            }
+            if($x+1 < $dimension){
+                if($this->findSecuence($x, $y, ($x + 1), ($y + 1), 1, $matrix, $dimension)){
+                    $cantidad++; // diagonal
+                }
             }
             if($x > 0){
-                array_push($adyacentes,[$y + 1, $x - 1]); // diagonal inverso
+                if($this->findSecuence($x, $y, ($x - 1), ($y + 1), 1, $matrix, $dimension)){
+                    $cantidad++; // diagonal inverso
+                }
             }
         }
-        return $adyacentes;
+        // Si ningún adyacente es valido o ninguno completa una secuenta, se regresa 0
+        return $cantidad;
     }
 
-    function recursividad($xOld,$yOld,$x,$y,$n,$matrix){
+    function findSecuence($xOld, $yOld, $x, $y, $n, $matrix, $dimension){
+        // Aquí verificamos la longitud de nuestra cadena de caracteres, cuando esta
+        // llegue a 4 quiere decir que es una mutación y podemos regresar true
+        // Al llamarlo la primera vez desde el método anterior se envia 1 como parametro 
+        // porque contamos con 1 caracter
         if($n == 4){
             return true;
         }
+        // Aquí verificamos que los valores en las posiciones sean iguales
         if($matrix[$yOld][$xOld] == $matrix[$y][$x]){
+            // Sumamos 1 a la longitud de nuestra cadena y calculamos la distancia para calcular nuestra
+            // siguiente posición
             $n++;
             $xDif = $x - $xOld;
             $yDif = $y - $yOld;
-            $this->recursividad($x,$y,$x + $xDif,$y + $yDif,$n,$matrix);
+            // Se evalua si estas nuevas coordenadas son validas dentro de la matriz, en caso
+            // de no serlo se regresa false
+            if($x + $xDif >= $dimension || $x + $xDif < 0){
+                return false;
+            }
+            if($y + $yDif >= $dimension){
+                return false;
+            }
+            // Se vuelve a llamar al método con nuevos valores para buscar el siguiente en
+            // la cadena y se retorna el resultado obtenido
+            return $this->findSecuence($x, $y, ($x + $xDif),($y + $yDif), $n, $matrix, $dimension);
         }
+        // en caso de no cumplir se retorna false
         return false;
     }
 
