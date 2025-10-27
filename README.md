@@ -37,6 +37,34 @@ En la parte izquierda tendremos el área de texto donde podemos interactuar escr
 <img width="1394" height="666" alt="image" src="https://github.com/user-attachments/assets/6e4e6bbc-dc20-42a8-ab68-b436bbe9b7b5" />
 Haremos Click sobre `Find mutation` y obtendremos nuestro resultado
 <img width="1912" height="924" alt="image" src="https://github.com/user-attachments/assets/e0d553c2-4cc4-49ff-ac75-15b8f221eab9" />
+### Ejemplos de formatos de entrada
+Sin mutación
+```
+A T G C G A
+C A G T G C
+T T A T T T
+A G A C G G
+G C G T C A
+T C A C T G
+```
+Con mutación
+```
+A T G C G A
+C A G T G C
+T T A T G T
+A G A A G G
+C C C C T A
+T C A C T G
+```
+### Ejemplos de consultas get a la api
+Obtener Listado
+```
+http://18.191.36.88/api/list
+```
+Obtener Stats
+```
+http://18.191.36.88/api/stats
+```
 ## Creditos
 - Dulce Roxanna Clark Valenzuela ([@fungirox](https://github.com/fungirox))
 
