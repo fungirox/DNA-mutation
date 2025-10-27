@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Api } from '../../services/api';
 import { response } from 'express';
@@ -12,10 +12,14 @@ import { response } from 'express';
   styleUrl: './dna-checker.css'
 })
 export class DnaChecker implements OnInit {
-  constructor(private api: Api) { }
+  constructor(
+    private api: Api,
+    private cdr: ChangeDetectorRef
+    ) { }
 
   dna_input: any = null;
   statsGraph: string[] = [];
+  stringRate: string = "";
   isActive: any;
 
   // Variables de consulta para almacenar los datos de la API y mostrar en la vista
@@ -43,9 +47,11 @@ export class DnaChecker implements OnInit {
     this.api.isMutant(dnaArray).subscribe({
       next: (response) => {
         this.result = response;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error:', error);
+        this.cdr.detectChanges();
       }
     });
   }

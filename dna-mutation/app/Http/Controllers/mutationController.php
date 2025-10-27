@@ -20,7 +20,7 @@ class mutationController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Please introduce valid DNA sequence'], 403);
+            return response()->json(['message' => 'Please introduce valid DNA sequence'], 400);
         }
 
         $dna = $request->input('dna_input');
@@ -57,11 +57,11 @@ class mutationController extends Controller
                 // En caso de que ya tengamos una mutación anterior y esta nueva que se 
                 // almacena en result, podemos regresar true dando como valida la operación
                 // o en su caso, se observen las dos mutaciones en la misma coordenada
-                if($found || $result > 1){
+                if($found && $result > 1){
                     return true;
                 }
                 // En caso de que sea nuestra primera mutación, simplemente se activa la bandera
-                elseif(!$found && $result < 1){
+                elseif(!$found && $result > 0){
                     $found = true;
                 }
             }
