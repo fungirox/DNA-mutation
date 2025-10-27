@@ -3,6 +3,14 @@
 Este es un buscador de mutaciones en secuencias de ADN realizado con PHP/Laravel y Angular. Se muestra una comparativa entre registros con y sin mutaciones, además de un listado de los últimos 10 registros.
 ## ¿Por qué este proyecto?
 Este proyecto fue creado como un reto integral para aprender y practicar Laravel y Angular. 
+## Stack
+- PHP 8.3
+- Laravel
+- SQLite
+- Composer
+- Angular
+## Deploy
+Desplegado en AWS EC2 (Ubuntu): http://18.191.36.88/api
 ## Requerimientos
 Para ejecutar como cliente de forma local solo necesitarás `Node.js` y `Angular`
 * [Node.js](https://nodejs.org/es)
@@ -21,6 +29,10 @@ git clone https://github.com/fungirox/DNA-mutation.git
 Navega hasta el directorio del proyecto
 ```
 cd dna-mutation-client
+```
+Instala las dependencias del proyecto
+```
+npm install
 ```
 Ejecuta el programa
 ```
@@ -56,14 +68,56 @@ A G A A G G
 C C C C T A
 T C A C T G
 ```
-### Ejemplos de consultas get a la api
-Obtener Listado
+### Endpoints
+**POST /api/mutation**
+
+**Request:**
+```json
+{
+  "dna_input": [
+    "ATGCGA",
+    "CAGTGC",
+    "TTATGT",
+    "AGAAGG",
+    "CCCCTA",
+    "TCACTG"
+  ]
+}
 ```
-http://18.191.36.88/api/list
+**Response (200 - Mutant):**
+```json
+{
+  "isMutant": true
+}
 ```
-Obtener Stats
+**Response (403 - Human):**
+```json
+{
+  "isMutant": false
+}
 ```
-http://18.191.36.88/api/stats
+**GET /api/list**
+
+Retorna un listado de los ultimos 10 registros
+**Response:**
+```
+[
+  {"dnaString":"[ATGCGA][CAGTGC][TTATGT][AGAAGG][CCCCTA][TCACTG]","isMutant":1,"createdDate":"2025-10-27 23:08:45"},
+  {"dnaString":"[ATGCGA][CAGTGC][TTATGT][AGAAGG][CCCCTA][TCACTG]","isMutant":1,"createdDate":"2025-10-27 22:51:51"},
+  {"dnaString":"[ATGCGA][CAGTGC][TTATTT][AGACGG][GCGTCA][TCACTG]","isMutant":0,"createdDate":"2025-10-27 22:51:18"},
+  ...
+]
+```
+**GET /api/stats**
+
+Retorna estadísticas de análisis.
+**Response:**
+```
+{
+  "count_mutations":2,
+  "count_no_mutations":1,
+  "rate":2
+}
 ```
 ## Creditos
 - Dulce Roxanna Clark Valenzuela ([@fungirox](https://github.com/fungirox))
